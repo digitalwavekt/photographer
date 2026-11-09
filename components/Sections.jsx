@@ -12,26 +12,28 @@ export function Navbar() {
   const { scrollYProgress } = useScroll(); const w = useSpring(scrollYProgress)
   return (<header className="fixed top-0 inset-x-0 z-50 backdrop-blur-md bg-jet/70 border-b border-white/5">
     <motion.div style={{ scaleX: w }} className="h-[3px] origin-left bg-gradient-to-r from-cerulean-glow to-rose" />
-    <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#home" className="font-display text-2xl tracking-[.25em]">LENS<span className="text-rose">FOLIO</span></a>
+    <nav className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#home" className="font-display text-xl sm:text-2xl tracking-[.2em] sm:tracking-[.25em]">LENS<span className="text-rose">FOLIO</span></a>
       <ul className="hidden md:flex gap-8 font-display uppercase tracking-widest text-sm">
         {nav.map(n => (<li key={n}><a href={`#${n.toLowerCase()}`} className="hover:text-cerulean-glow transition">{n}</a></li>))}</ul>
       <a href="#contact" className="hidden md:block px-5 py-2 rounded-full bg-rose shadow-neon font-display uppercase text-sm tracking-wider hover:scale-105 transition">Book a Shoot</a>
-      <button className="md:hidden text-2xl" onClick={() => setOpen(!open)} aria-label="menu">{open ? '✕' : '☰'}</button></nav>
-    <AnimatePresence>{open && (<motion.ul initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} className="md:hidden overflow-hidden bg-jet-800 px-6">
-      {nav.map(n => (<li key={n} className="py-3 font-display uppercase"><a onClick={() => setOpen(false)} href={`#${n.toLowerCase()}`}>{n}</a></li>))}</motion.ul>)}</AnimatePresence></header>) }
+      <button className="md:hidden grid h-11 w-11 place-items-center rounded-full border border-white/10 text-2xl" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>{open ? '✕' : '☰'}</button></nav>
+    <AnimatePresence>{open && (<motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="md:hidden overflow-y-auto overscroll-contain bg-jet-800 px-6 pb-5" style={{ maxHeight: 'calc(100dvh - 4.25rem)' }}>
+      <ul>{nav.map(n => (<li key={n} className="border-b border-white/5 py-3 font-display uppercase tracking-wider"><a className="block py-1" onClick={() => setOpen(false)} href={`#${n.toLowerCase()}`}>{n}</a></li>))}</ul>
+      <a onClick={() => setOpen(false)} href="#contact" className="mt-5 block rounded-full bg-rose px-5 py-3 text-center font-display uppercase tracking-wider">Book a Shoot</a>
+    </motion.div>)}</AnimatePresence></header>) }
 
 export function Hero() {
-  return (<section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-16">
+  return (<section id="home" className="relative flex min-h-[100svh] items-center overflow-hidden py-24 md:min-h-screen md:py-16">
     <div className="absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-cerulean/30 blur-[140px]" />
     <div className="absolute bottom-0 right-0 w-[460px] h-[460px] rounded-full bg-rose/25 blur-[140px]" />
-    <div className="relative max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
+    <div className="relative max-w-7xl mx-auto px-5 sm:px-6 grid md:grid-cols-2 gap-7 md:gap-10 items-center">
       <div><motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-script text-3xl text-rose-soft">Videographer · Photographer · Storyteller</motion.p>
-        <motion.h1 initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9 }} className="font-display text-6xl md:text-8xl uppercase leading-none my-4">
+        <motion.h1 initial={{ opacity: 0, y: 60 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9 }} className="font-display text-5xl sm:text-6xl md:text-8xl uppercase leading-none my-4">
           We frame <span className="grad-text">stories</span></motion.h1>
         <p className="text-white/60 max-w-md mb-8">{brand.tagline} Cinematic films for weddings, brands, music and events.</p>
-        <div className="flex gap-4"><a href="#gallery" className="px-7 py-3 rounded-full bg-cerulean shadow-blue font-display uppercase tracking-wider">View Gallery</a>
-          <a href="#contact" className="px-7 py-3 rounded-full border border-rose text-rose font-display uppercase tracking-wider hover:bg-rose hover:text-white transition">Let's Talk</a></div></div>
+        <div className="flex flex-wrap gap-3 sm:gap-4"><a href="#gallery" className="px-5 sm:px-7 py-3 rounded-full bg-cerulean shadow-blue font-display text-sm sm:text-base uppercase tracking-wider">View Gallery</a>
+          <a href="#contact" className="px-5 sm:px-7 py-3 rounded-full border border-rose text-rose font-display text-sm sm:text-base uppercase tracking-wider hover:bg-rose hover:text-white transition">Let's Talk</a></div></div>
       <div className="relative grid place-items-center">
         <motion.div animate={{ y: [0, -14, 0] }} transition={{ repeat: Infinity, duration: 5 }}><Photographer /></motion.div>
         <motion.div animate={{ opacity: [0, 1, 0], scale: [.6, 1.6, .6] }} transition={{ repeat: Infinity, duration: 2.4, repeatDelay: 1 }}
@@ -109,7 +111,8 @@ export function Gallery() {
   const scale = useTransform(p, [.25, .55], [1, 14])
   const camOp = useTransform(p, [.45, .6], [1, 0])
   const clip = useTransform(p, [.28, .62], ['circle(0% at 50% 50%)', 'circle(80% at 50% 50%)'])
-  return (<section id="gallery" ref={ref} className="relative h-[320vh]"><div className="sticky top-0 h-screen overflow-hidden">
+  return (<section id="gallery" className="relative">
+    <div ref={ref} className="relative hidden h-[320vh] md:block"><div className="sticky top-0 h-screen overflow-hidden">
     <div className="absolute inset-0 grid place-items-center"><p className="font-display text-5xl md:text-7xl uppercase text-white/10">Home Gallery</p></div>
     <motion.div style={{ x, scale, opacity: camOp }} className="absolute inset-0 grid place-items-center"><Camera size={200} /></motion.div>
     <motion.div style={{ clipPath: clip }} className="absolute inset-0 bg-jet pt-24 pb-6 px-4 md:px-10 flex flex-col">
@@ -122,7 +125,23 @@ export function Gallery() {
           <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/75 via-transparent to-black/20" />
           <span className="pointer-events-none absolute bottom-3 left-4 font-display uppercase tracking-widest text-sm">{item.title}</span>
           <span className="pointer-events-none absolute top-3 right-3 rounded-full bg-black/50 px-3 py-1 text-[10px] uppercase tracking-widest">{item.type}</span>
-        </motion.div>))}</div></motion.div></div></section>) }
+        </motion.div>))}</div></motion.div></div></div>
+    <div className="py-16 md:hidden">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6">
+        <H a="Home" b="Gallery" />
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          {gallery.map((item) => (<div key={item.title} className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-white/10 bg-jet-800">
+            {item.type === 'video'
+              ? <video src={item.src} poster={item.poster} aria-label={item.alt} controls muted playsInline preload="none" className="absolute inset-0 h-full w-full object-cover" />
+              : <img src={item.src} alt={item.alt} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+            <span className="pointer-events-none absolute bottom-2 left-2 right-2 font-display text-[10px] uppercase tracking-wider sm:bottom-3 sm:left-3 sm:text-xs">{item.title}</span>
+            <span className="pointer-events-none absolute right-2 top-2 rounded-full bg-black/50 px-2 py-1 text-[9px] uppercase tracking-widest">{item.type}</span>
+          </div>))}
+        </div>
+      </div>
+    </div>
+  </section>) }
 
 export function Projects() {
   return (<section id="projects" className="py-28 max-w-7xl mx-auto px-6"><H a="Our" b="Projects" />
