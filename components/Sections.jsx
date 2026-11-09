@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import { Camera, Photographer } from './Camera'
-import { brand, nav, socials, gallery, projects, fallbackReviews, address } from '../lib/data'
+import { brand, nav, socials, gallery, services, faqs, projects, fallbackReviews, address } from '../lib/data'
 
 const fade = { initial: { opacity: 0, y: 40 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: .7 } }
 const H = ({ a, b }) => (<h2 className="font-display text-4xl md:text-6xl uppercase mb-10">{a} <span className="grad-text">{b}</span></h2>)
@@ -38,6 +38,70 @@ export function Hero() {
           className="absolute top-[28%] left-[46%] w-16 h-16 rounded-full bg-white blur-xl" />
         <motion.span animate={{ opacity: [1, 0, 1] }} transition={{ repeat: Infinity, duration: 1.2 }} className="absolute top-6 right-6 font-display text-rose">● REC</motion.span></div></div></section>) }
 
+export function About() {
+  return (<section id="about" className="py-24 md:py-32">
+    <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+      <motion.div {...fade} className="relative">
+        <div className="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-cerulean/40 to-rose/30 blur-xl" />
+        <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=1200&q=85"
+          alt="Photographer capturing a celebration" loading="lazy"
+          className="relative h-[360px] md:h-[500px] w-full rounded-[2rem] object-cover border border-white/10" />
+        <span className="absolute bottom-5 left-5 rounded-full bg-jet/80 px-4 py-2 font-display text-xs uppercase tracking-widest text-cerulean-glow backdrop-blur">Jaipur · India</span>
+      </motion.div>
+      <motion.div {...fade} transition={{ delay: .15, duration: .7 }}>
+        <p className="font-script text-3xl text-rose-soft">A little about us</p>
+        <H a="Made of" b="Moments" />
+        <p className="text-lg leading-8 text-white/70">We are a small team of photographers and filmmakers who believe the best stories are the ones that feel like you.</p>
+        <p className="mt-5 leading-7 text-white/55">From the happy chaos of a birthday to the quiet joy of welcoming a new baby, we capture real people, real connections, and the details you will want to remember. Based in Jaipur, we bring a thoughtful eye, an easygoing approach, and a little cinematic magic to every celebration.</p>
+        <a href="#services" className="mt-8 inline-flex rounded-full border border-rose px-6 py-3 font-display text-sm uppercase tracking-widest text-rose transition hover:bg-rose hover:text-white">Explore our services</a>
+      </motion.div>
+    </div>
+  </section>)
+}
+
+export function Services() {
+  const track = useRef(null)
+  const scrollCards = (direction) => {
+    if (!track.current) return
+    track.current.scrollBy({ left: direction * track.current.clientWidth * .78, behavior: 'smooth' })
+  }
+
+  return (<section id="services" className="overflow-hidden py-24 md:py-28">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="flex items-end justify-between gap-6">
+        <div><p className="mb-3 font-script text-3xl text-rose-soft">For every chapter</p><H a="Our" b="Services" /></div>
+        <div className="mb-10 hidden gap-3 sm:flex">
+          <button type="button" onClick={() => scrollCards(-1)} aria-label="Scroll services left"
+            className="grid h-12 w-12 place-items-center rounded-full border border-white/15 text-xl transition hover:border-rose hover:text-rose">←</button>
+          <button type="button" onClick={() => scrollCards(1)} aria-label="Scroll services right"
+            className="grid h-12 w-12 place-items-center rounded-full border border-white/15 text-xl transition hover:border-rose hover:text-rose">→</button>
+        </div>
+      </div>
+      <div ref={track} className="flex snap-x snap-mandatory gap-5 overflow-x-auto overscroll-x-contain pb-8 [perspective:1200px] [scrollbar-width:thin]">
+        {services.map((service, i) => (<motion.article key={service.title}
+          initial={{ opacity: 0, x: 90, rotateY: 16 }}
+          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+          viewport={{ once: true, amount: .2 }}
+          transition={{ duration: .65, delay: (i % 3) * .1 }}
+          whileHover={{ y: -8, rotateY: -3, scale: 1.02 }}
+          style={{ transformStyle: 'preserve-3d' }}
+          className="group relative h-[390px] w-[82vw] max-w-[340px] shrink-0 snap-start overflow-hidden rounded-3xl border border-white/10 bg-jet-800 sm:w-[340px]">
+          <img src={service.image} alt={service.alt} loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110" />
+          <div className="absolute inset-0 bg-gradient-to-t from-jet via-jet/30 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-6">
+            <span className="font-display text-sm tracking-widest text-cerulean-glow">0{i + 1} / 0{services.length}</span>
+            <h3 className="mt-3 font-display text-2xl uppercase tracking-wide">{service.title}</h3>
+            <p className="mt-2 text-sm leading-6 text-white/65">{service.description}</p>
+            <a href="#contact" className="mt-5 inline-flex items-center gap-2 font-display text-xs uppercase tracking-widest text-rose transition group-hover:gap-3">Plan your shoot <span aria-hidden="true">→</span></a>
+          </div>
+        </motion.article>))}
+      </div>
+      <p className="mt-1 text-xs uppercase tracking-widest text-white/35 sm:hidden">Swipe to explore <span aria-hidden="true">→</span></p>
+    </div>
+  </section>)
+}
+
 export function Gallery() {
   const ref = useRef(null)
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
@@ -68,6 +132,25 @@ export function Projects() {
         <p className="font-display text-5xl text-cerulean-glow/40 group-hover:text-rose transition">0{i + 1}</p>
         <h3 className="font-display uppercase text-xl mt-6 mb-2">{p.t}</h3><p className="text-white/55 text-sm mb-5">{p.d}</p>
         <span className="text-xs tracking-widest text-cerulean-glow uppercase">{p.k}</span></motion.div>))}</div></section>) }
+
+export function FAQ() {
+  return (<section id="faq" className="bg-jet-800 py-24 md:py-28">
+    <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[.8fr_1.2fr]">
+      <div><p className="mb-3 font-script text-3xl text-rose-soft">Good to know</p><H a="Questions &" b="Answers" />
+        <p className="max-w-sm leading-7 text-white/55">Have something else in mind? <a href="#contact" className="text-cerulean-glow underline underline-offset-4 hover:text-rose">Ask us directly.</a></p></div>
+      <div className="space-y-3">
+        {faqs.map((item, i) => (<motion.details key={item.question} {...fade} transition={{ delay: i * .06, duration: .5 }}
+          className="group rounded-2xl border border-white/10 bg-jet px-5 py-5 open:border-rose/50 md:px-6">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-5 font-display text-base uppercase tracking-wide marker:hidden md:text-lg">
+            {item.question}
+            <span aria-hidden="true" className="text-2xl leading-none text-rose transition group-open:rotate-45">+</span>
+          </summary>
+          <p className="max-w-2xl pt-4 text-sm leading-7 text-white/60">{item.answer}</p>
+        </motion.details>))}
+      </div>
+    </div>
+  </section>)
+}
 
 export function Reviews() {
   const [d, setD] = useState({ live: false, reviews: fallbackReviews })
