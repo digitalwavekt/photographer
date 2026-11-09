@@ -1,0 +1,6 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html { scroll-behavior: smooth; background: #0A0A0C; }
+body { color: #ECECF1; font-family: system-ui, sans-serif; overflow-x: hidden; }
+.grad-text { background: linear-gradient(90deg,#2CB5E8,#FF2E88); -webkit-background-clip: text; color: transparent; }
+.grain::after { content:''; position:fixed; inset:0; pointer-events:none; opacity:.05; z-index:60;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='.9'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>"); }
